@@ -1,63 +1,114 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <string.h>
 
-int my_puts (const char* s){
-	printf("%s\n", s);
+int my_puts (const char* str){
+	while(*str != '\0'){
+		putc(*str, stdout);
+		str++;
+	}
+	putc('\n', stdout);
 	return 0;
 }
 
-char* my_strchar (char* s, int c){
-	while (*s != c && *s != '\0')
-		s++;
-	return (*s == c) ? s : NULL;
+char* my_strchr (char* str, int chr){
+	while (*str != chr && *str != '\0')
+		str++;
+	return (*str == chr) ? str : NULL;
 }
 
-int my_strlen (const char* s){
+int my_strlen (const char* str){
 	int len = 0;
-	while(*s++)
+	while(*str++)
 		len++;
 	return len;
 }
 
-char* my_strcpy (char* s, const char* ct){
-	int len = my_strlen(ct);
-	while (*ct){
-		*s = *ct;
-		s++;
-		ct++;
+char* my_strcpy (char* destination, const char* source){
+	char* begin = destination;
+	while (*source){
+		*destination = *source;
+		destination++;
+		source++;
 	}
-	*s = '\0';
-	return s - len;
+	*destination = '\0';
+	return begin;
 }
 
-char* my_strncpy (char* s, const char* ct, size_t n){
-	for (int i = 0; i < n && *ct != '\0'; i++){
-		*s = *ct;
-		s++;
-		ct++;
+char* my_strncpy (char* destination, const char* source, size_t n){
+	for (size_t i = 0; i < n && *source != '\0'; i++){
+		*destination = *source;
+		destination++;
+		source++;
 	}	
-	*s = '\0';
-	return s - n;
+	*destination = '\0';
+	return destination - n;
 }
 
-char* my_strcat (char* s, const char* ct){
-	int len = my_strlen(s) + my_strlen(ct);
-	s += my_strlen(s);
-	while (*ct){
-		*s = *ct;
-		s++;
-		ct++;
+char* my_strcat (char* str, const char* add){
+	char* begin = str;
+	str += my_strlen(str);
+	while (*add){
+		*str = *add;
+		str++;
+		add++;
 	}
-	*s = '\0';
-	return s - len;
+	*str = '\0';
+	return begin;
+}
+
+char* my_strncat (char* str, const char* add, size_t n){
+	char* begin = str;
+	str += my_strlen(str);
+	for (size_t i = 0; i < n && *add != '\0'; i++){
+		*str= *add;
+		str++;
+		add++;
+	}
+	*str = '\0';
+	return begin;
 }
 
 int main(){
-	const char* ct = "sleep";
-	const char* s = "I like to ";
-	char* s1 = malloc(my_strlen(ct) + my_strlen(s));
-	s1 = my_strcpy(s1, s);
-	s1 = my_strcat(s1, ct);
-	printf("%s\n", s1);
+	//my_puts check
+	const char* str1 = "I like to sleep";
+	my_puts(str1);
+	puts(str1);
+	
+	//my_strchr check
+	char* str = "I'd like to sleep";
+	int chr = 101;
+	if (my_strchr(str, chr) == strchr(str, chr))
+		printf("cool\n");
+
+	//my_strlen check
+	if (my_strlen(str1) == strlen(str1))
+		printf("cool\n");
+
+	//my_strcpy check
+	const char* source = "I want to sleep"; 
+	char* destination = calloc(16, sizeof(char));
+	my_puts(my_strcpy(destination, source));
+	my_puts(strcpy(destination, source));
+
+	//my_strncpy check
+	size_t n = 6;
+	my_puts(my_strncpy(destination, source, n));
+	my_puts(strncpy(destination, source, n));
+
+	//my_strcat check
+	char* str2 = calloc(30, sizeof(char));
+	my_strcpy(str2, str1);
+	const char* add = " and eat";
+	my_puts(my_strcat(str2, add));
+	my_puts(strcat(str2, add));
+
+	//my_strncat check
+	my_puts(my_strncat(str2, add, n));
+	my_puts(strncat(str2, add, n));
+
+	free(destination);
+	free(str2);
+	
 }
