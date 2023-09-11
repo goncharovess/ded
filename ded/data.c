@@ -45,10 +45,13 @@ void PrintDataTriangle (const int* data, size_t length){ //печать треу
 				printf("%d ", *(data + j));
 			}
 			else{
-				exit(0);
+				break;
 			}
 		}
 		data += i + 1;
+		if (data > end){
+			break;
+		}
 		printf("\n");
 	}
 }
@@ -76,14 +79,14 @@ int main(){
 	
 	free((void*) data1);
 	
-	/*const int data2[15] = {0, 
+	const int data2[15] = {0, 
 			       2, 3, 
 			       4, 5, 6,
 			       7, 8, 9, 4,
-			       1, 0, 2, 1, 5};*/
+			       1, 0, 2, 1, 5};
 
-	//size_t lengthData2 = 15;
-	//PrintDataTriangle(data2, lengthData2); 
+	size_t lengthData2 = 15;
+	PrintDataTriangle(data2, lengthData2); 
 	
 	size_t i = 2;
 	size_t j = 2;
