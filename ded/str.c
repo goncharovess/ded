@@ -70,6 +70,22 @@ char* my_strncat (char* str, const char* add, size_t n){
 	return begin;
 }
 
+char* my_fgets(char* line, size_t maxline, FILE* file){
+	char c;
+	char* cursor = line;
+	while ((c = getc(file)) != '\n' && --maxline > 1 && c != EOF){
+		*cursor = c;
+		cursor++;
+	}
+	*cursor = '\0';
+	if (c == EOF){
+		return NULL;
+	}
+	else{
+		return line;
+	}
+}
+
 int main(){
 	//my_puts check
 	const char* str1 = "I like to sleep";
@@ -107,6 +123,13 @@ int main(){
 	//my_strncat check
 	my_puts(my_strncat(str2, add, n));
 	my_puts(strncat(str2, add, n));
+	
+	//my_fgets check
+	char* line = calloc(30, sizeof(char));
+	size_t maxline = 10;
+	FILE* file = fopen("file", "r");
+	my_puts(my_fgets(line, maxline, file));
+	free(line);
 
 	free(destination);
 	free(str2);
