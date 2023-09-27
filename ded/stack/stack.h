@@ -16,18 +16,18 @@ struct stack
 	Elem_t* data;
 	long long size;
 	long long capacity;
-	int status;
+	size_t status;
 
-	int line;
+	size_t line;
 	char* file;
 	char* func;
 };
 
 //stack functions
 
-struct stack* stackCtor(long long capacity, int line, const char* file, const char* func);
+struct stack* stackCtor(long long capacity, size_t line, const char* file, const char* func);
 
-int stackPush(struct stack* stk, Elem_t value);
+size_t stackPush(struct stack* stk, Elem_t value);
 
 Elem_t stackPop(struct stack* stk);
 
