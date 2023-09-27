@@ -25,12 +25,19 @@ struct stack
 
 //stack functions
 
-struct stack* stackCtor(long long capacity, size_t line, const char* file, const char* func);
+struct stack* stackCtor (long long capacity, size_t line, const char* file, const char* func);
 
-size_t stackPush(struct stack* stk, Elem_t value);
+size_t stack_OK (struct stack* stk);
 
-Elem_t stackPop(struct stack* stk);
+void stackDump(struct stack* stk, const char* name, size_t line, const char* file, const char* func);
 
+void print_stack_status (struct stack* stk);
+
+size_t stackPush (struct stack* stk, Elem_t value);
+
+Elem_t stackPop (struct stack* stk);
+
+size_t stackDtor (struct stack* stk);
 
 #endif //STACK_H
 

@@ -3,11 +3,12 @@
 const Elem_t TRASH_ELEM = 0xDEAD;
 
 #define STACK_CTOR(capacity) stackCtor((capacity), __LINE__, __FILE__, __PRETTY_FUNCTION__);
+#define STACK_DUMP(stk) stackDump((stk), #stk, __LINE__, __FILE__, __PRETTY_FUNCTION__ );
 
-enum stack_status //каждая ошибка соответствует определенному биту в целом числе
+enum stack_status
 {
 	ALL_IS_OK = 0,
-	NEGATIVE_SIZE = 1 << 0, //представление степеней двойки при помощи побитового сдвига
+	NEGATIVE_SIZE = 1 << 0,
 	NEGATIVE_ITER = 1 << 1,
 	NEGATIVE_CAPACITY = 1 << 2,
 	SIZE_BIGGER_CAPACITY = 1 << 3,
@@ -20,7 +21,7 @@ const char* errors[5] = {"The stack has a negative size\n",
 			 "Size of stack is bigger than it's capacity\n",
 			 "Empty cells are not filled with TRASH_ELEM\n"};
 
-struct stack* stackCtor (long long capacity, size_t line, const char* file, const char* func) //конструктор
+struct stack* stackCtor (long long capacity, size_t line, const char* file, const char* func) 
 {
 	struct stack* stk = (struct stack*) malloc(sizeof(struct stack));	
 	
@@ -35,7 +36,7 @@ struct stack* stackCtor (long long capacity, size_t line, const char* file, cons
 	return stk;
 }
 
-size_t stack_OK (struct stack* stk) //возвращает целое число, в двоичном представлении которого каждая единица свидетельствует о наличии конкретной ошибки
+size_t stack_OK (struct stack* stk)
 {
 	size_t error = 0;
 
@@ -59,7 +60,7 @@ void print_stack_status (struct stack* stk)
 {
 	size_t error = stk->status;
 	
-	printf("\nStack status:\n");
+	printf("Stack status:\n");
 
 	if (error == 0) printf("The stack is OK\n"); 
 	
@@ -67,6 +68,40 @@ void print_stack_status (struct stack* stk)
 	{
 		if ( (error & (1 << error_iter)) > 0 ) puts(errors[error_iter]);
 	}
+}
+
+void stackDump (struct stack* stk, const char* name, size_t line, const char* file, const char* func)
+{
+	printf("Name of stack: %s\n", name);
+	printf("Stack adress: %p\n\n", stk);
+	
+	printf("The stack has been created..\n");
+	printf("in function %s\n", stk->func);
+	printf("from file %s\n", stk->file);
+	printf("on the line %d\n\n", stk->line);
+
+	printf("Dump is called..\n");
+	printf("in function %s\n", func);
+	printf("from file %s\n", file);
+	printf("on the line %d\n\n", line);
+
+	printf("Size of stack: %lld\n", stk->size);
+	printf("Capacity of stack: %lld\n\n", stk->capacity);
+	
+	printf("data[%lld]\n", stk->capacity);
+	printf("{\n");
+	for (size_t data_iter = 0; data_iter < (size_t) stk->capacity; data_iter++)
+	{
+		if (data_iter < (size_t) stk->size)
+		{
+			printf("\t*[%d] = %d\n", data_iter, *(stk->data + data_iter));
+		}
+		else
+		{
+			printf("\t [%d] = %d\n", data_iter, *(stk->data + data_iter));
+		}
+	}
+	printf("}");
 }
 
 size_t stackPush (struct stack* stk, Elem_t value)
@@ -116,7 +151,7 @@ Elem_t stackPop (struct stack* stk)
 	return removed_elem;
 }
 
-size_t stackDtor (struct stack* stk) //деструктор
+size_t stackDtor (struct stack* stk) 
 {
 	for (size_t stk_iter = 0; stk_iter < (size_t) stk->size; stk_iter++)
 	{
@@ -127,8 +162,11 @@ size_t stackDtor (struct stack* stk) //деструктор
 
 	stk->size = -5;
 	stk->capacity = -3;
-	stk->status = stack_OK(stk);
+	
+	size_t status = stack_OK(stk);
 
-	return stk->status;
+	free(stk);
+
+	return status;
 }
 
