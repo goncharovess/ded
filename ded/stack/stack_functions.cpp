@@ -6,17 +6,17 @@ enum stack_status
 {
 	ALL_IS_OK = 0,
 	NEGATIVE_SIZE = 1 << 0,
-	NEGATIVE_ITER = 1 << 1,
+	NULL_DATA = 1 << 1,
 	NEGATIVE_CAPACITY = 1 << 2,
 	SIZE_BIGGER_CAPACITY = 1 << 3,
 	NEXT_ELEM_NOT_TRASH = 1 << 4
 };
 
-const char* errors[5] = {"The stack has a negative size\n",
-		         "The stack has a negative iter\n", 
-			 "The stack has a negative capacity\n",
-			 "Size of stack is bigger than it's capacity\n",
-			 "Empty cells are not filled with TRASH_ELEM\n"};
+static const char* errors[5] = {"The stack has a negative size\n",
+		         	"Pointer to data is NULL\n", 
+			 	"The stack has a negative capacity\n",
+			 	"Size of stack is bigger than it's capacity\n",
+			 	"Empty cells are not filled with TRASH_ELEM\n"};
 
 struct stack* stackCtor (long long capacity, size_t line, const char* file, const char* func) 
 {
@@ -29,6 +29,11 @@ struct stack* stackCtor (long long capacity, size_t line, const char* file, cons
 	stk->file = file;
 	stk->func = func;
 	stk->status = stack_OK(stk);
+	
+	for (long long data_iter = stk->size; data_iter < stk->capacity; data_iter++)
+	{
+		*(stk->data + data_iter) = TRASH_ELEM;
+	}
 
 	return stk;
 }
@@ -38,7 +43,7 @@ int stack_OK (struct stack* stk)
 	int error = 0;
 
 	if (stk->size < 0) error |= NEGATIVE_SIZE;
-	if (stk->data == NULL) error |= NEGATIVE_ITER;
+	if (stk->data == NULL) error |= NULL_DATA;
 	if (stk->capacity < 0) error |= NEGATIVE_CAPACITY;
 	if (stk->size > stk->capacity) error |= SIZE_BIGGER_CAPACITY;
 	
@@ -98,7 +103,7 @@ void stackDump (struct stack* stk, const char* name, size_t line, const char* fi
 			printf("\t [%lld] = %d\n", data_iter, *(stk->data + data_iter));
 		}
 	}
-	printf("}");
+	printf("}\n");
 }
 
 int stackPush (struct stack* stk, Elem_t value)
