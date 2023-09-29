@@ -14,7 +14,7 @@ typedef int Elem_t;
 #define STACK_CTOR(capacity) stackCtor((capacity), __LINE__, __FILE__, __PRETTY_FUNCTION__);
 #define STACK_DUMP(stk) stackDump((stk), #stk, __LINE__, __FILE__, __PRETTY_FUNCTION__ );
 
-struct stack
+typedef struct
 {
 	Elem_t* data;
 	long long size;
@@ -24,23 +24,23 @@ struct stack
 	size_t line;
 	const char* file;
 	const char* func;
-};
+}Stack;
 
 //stack functions
 
-struct stack* stackCtor (long long capacity, size_t line, const char* file, const char* func);
+Stack* stackCtor (long long capacity, size_t line, const char* file, const char* func);
 
-int stack_OK (struct stack* stk);
+int stack_OK (Stack* stk);
 
-void stackDump(struct stack* stk, const char* name, size_t line, const char* file, const char* func);
+void stackDump(Stack* stk, const char* name, size_t line, const char* file, const char* func);
 
-void print_stack_status (struct stack* stk);
+void print_stack_status (Stack* stk);
 
-int stackPush (struct stack* stk, Elem_t value);
+int stackPush (Stack* stk, Elem_t value);
 
-Elem_t stackPop (struct stack* stk);
+Elem_t stackPop (Stack* stk);
 
-int stackDtor (struct stack* stk);
+int stackDtor (Stack* stk);
 
 #endif //STACK_H
 

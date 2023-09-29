@@ -18,9 +18,9 @@ static const char* errors[5] = {"The stack has a negative size\n",
 			 	"Size of stack is bigger than it's capacity\n",
 			 	"Empty cells are not filled with TRASH_ELEM\n"};
 
-struct stack* stackCtor (long long capacity, size_t line, const char* file, const char* func) 
+Stack* stackCtor (long long capacity, size_t line, const char* file, const char* func) 
 {
-	struct stack* stk = (struct stack*) malloc(sizeof(struct stack));	
+	Stack* stk = (Stack*) malloc(sizeof(Stack));	
 	
 	stk->data = (Elem_t*) calloc((size_t) capacity, sizeof(Elem_t));
 	stk->capacity = capacity;
@@ -38,7 +38,7 @@ struct stack* stackCtor (long long capacity, size_t line, const char* file, cons
 	return stk;
 }
 
-int stack_OK (struct stack* stk)
+int stack_OK (Stack* stk)
 {
 	int error = 0;
 
@@ -58,7 +58,7 @@ int stack_OK (struct stack* stk)
 	return error;
 }	
 
-void print_stack_status (struct stack* stk)
+void print_stack_status (Stack* stk)
 {
 	int error = stk->status;
 	
@@ -72,7 +72,7 @@ void print_stack_status (struct stack* stk)
 	}
 }
 
-void stackDump (struct stack* stk, const char* name, size_t line, const char* file, const char* func)
+void stackDump (Stack* stk, const char* name, size_t line, const char* file, const char* func)
 {
 	printf("Name of stack: %s\n", name);
 	printf("Stack adress: %p\n\n", stk);
@@ -106,7 +106,7 @@ void stackDump (struct stack* stk, const char* name, size_t line, const char* fi
 	printf("}\n");
 }
 
-int stackPush (struct stack* stk, Elem_t value)
+int stackPush (Stack* stk, Elem_t value)
 {
 	stk->status = stack_OK(stk);
 	if (stk->status) return stk->status;
@@ -130,7 +130,7 @@ int stackPush (struct stack* stk, Elem_t value)
 	return stk->status;
 }
 
-Elem_t stackPop (struct stack* stk)
+Elem_t stackPop (Stack* stk)
 {
 	stk->status = stack_OK(stk);
 	if (stk->status) return stk->status;
@@ -153,7 +153,7 @@ Elem_t stackPop (struct stack* stk)
 	return removed_elem;
 }
 
-int stackDtor (struct stack* stk) 
+int stackDtor (Stack* stk) 
 {
 	for (long long stk_iter = 0; stk_iter < stk->size; stk_iter++)
 	{
@@ -164,11 +164,9 @@ int stackDtor (struct stack* stk)
 
 	stk->size = -5;
 	stk->capacity = -3;
-	
-	int status = stack_OK(stk);
 
 	free(stk);
 
-	return status;
+	return 0;
 }
 

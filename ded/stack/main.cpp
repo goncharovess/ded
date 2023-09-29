@@ -2,7 +2,7 @@
 
 int main()
 {
-	struct stack* stk = STACK_CTOR(15);	
+	Stack* stk = STACK_CTOR(15);	
 	STACK_DUMP(stk);
 	stackDtor(stk);
 }
